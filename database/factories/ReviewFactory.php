@@ -23,7 +23,7 @@ class ReviewFactory extends Factory
       'review' => $this->randomLengthReview($faker),
       'rating' => $faker->numberBetween(1, 5),
       'created_at' => $faker->dateTimeBetween('-2 years', 'now'),
-      'updated_at' => $faker->dateTimeBetween('createdAt', 'now'),
+      'updated_at' => $faker->dateTimeBetween('$created_at', 'now'),
 
     ];
   }

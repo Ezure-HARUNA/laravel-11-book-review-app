@@ -22,7 +22,7 @@ class BookFactory extends Factory
       'title' => $faker->realText(15), // $fakerを使用して、日本語のダミーデータを生成
       'author' => $faker->name,
       'created_at' => $faker->dateTimeBetween('-2 years', 'now'),
-      'updated_at' => $faker->dateTimeBetween('createdAt', 'now'),
+      'updated_at' => $faker->dateTimeBetween('$created_at', 'now'),
     ];
   }
 }
