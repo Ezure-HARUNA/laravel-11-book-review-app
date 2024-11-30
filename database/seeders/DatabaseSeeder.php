@@ -22,24 +22,29 @@ class DatabaseSeeder extends Seeder
     //     'email' => 'test@example.com',
     // ]);
 
+    // Good Reviews
     Book::factory(33)->create()->each(function ($book) {
       $numReviews = random_int(5, 30);
       Review::factory()->count($numReviews)
-        ->good()
+        ->state(['rating' => 5])
         ->for($book)
         ->create();
     });
+
+    // Average Reviews
     Book::factory(34)->create()->each(function ($book) {
       $numReviews = random_int(5, 30);
       Review::factory()->count($numReviews)
-        ->average()
+        ->state(['rating' => 3])
         ->for($book)
         ->create();
     });
+
+    // Bad Reviews
     Book::factory(33)->create()->each(function ($book) {
       $numReviews = random_int(5, 30);
       Review::factory()->count($numReviews)
-        ->bad()
+        ->state(['rating' => 1])
         ->for($book)
         ->create();
     });
