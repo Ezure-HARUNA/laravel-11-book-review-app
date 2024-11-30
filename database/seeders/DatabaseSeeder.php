@@ -8,11 +8,10 @@ use App\Models\Review;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+use Illuminate\Support\Arr;
+
 class DatabaseSeeder extends Seeder
 {
-  /**
-   * Seed the application's database.
-   */
   public function run(): void
   {
     // User::factory(10)->create();
@@ -22,31 +21,18 @@ class DatabaseSeeder extends Seeder
     //     'email' => 'test@example.com',
     // ]);
 
-    // Good Reviews
-    Book::factory(33)->create()->each(function ($book) {
+    // Mixed Reviews
+    Book::factory(100)->create()->each(function ($book) {
       $numReviews = random_int(5, 30);
-      Review::factory()->count($numReviews)
-        ->state(['rating' => 5])
-        ->for($book)
-        ->create();
-    });
-
-    // Average Reviews
-    Book::factory(34)->create()->each(function ($book) {
-      $numReviews = random_int(5, 30);
-      Review::factory()->count($numReviews)
-        ->state(['rating' => 3])
-        ->for($book)
-        ->create();
-    });
-
-    // Bad Reviews
-    Book::factory(33)->create()->each(function ($book) {
-      $numReviews = random_int(5, 30);
-      Review::factory()->count($numReviews)
-        ->state(['rating' => 1])
-        ->for($book)
-        ->create();
+      for ($i = 0; $i < $numReviews; $i++) {
+        Review::factory()->state(['rating' => Arr::random([
+          1,
+          2,
+          3,
+          4,
+          5
+        ])])->for($book)->create();
+      }
     });
   }
 }
