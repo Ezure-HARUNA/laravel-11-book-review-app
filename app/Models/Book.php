@@ -51,31 +51,31 @@ class Book extends Model
     }
   }
 
-  public function scopePopularLastMonth(Builder $query): Builder | QueryBuilder
+  public function scopePopularLastMonth(Builder $query): Builder|QueryBuilder
   {
     return $query->popular(now()->subMonth(), now())
       ->highestRated(now()->subMonth(), now())
       ->minReviews(2);
   }
 
-  public function scopePopularLast6Months(Builder $query): Builder | QueryBuilder
+  public function scopePopularLast6Months(Builder $query): Builder|QueryBuilder
   {
     return $query->popular(now()->subMonth(6), now())
       ->highestRated(now()->subMonth(6), now())
       ->minReviews(5);
   }
 
-  public function scopeHighestRatedLastMonth(Builder $query): Builder | QueryBuilder
+  public function scopeHighestRatedLastMonth(Builder $query): Builder|QueryBuilder
   {
     return $query->highestRated(now()->subMonth(), now())
-      ->highestRated(now()->subMonth(), now())
+      ->popular(now()->subMonth(), now())
       ->minReviews(2);
   }
 
-  public function scopeHighestRatedLast6Months(Builder $query): Builder | QueryBuilder
+  public function scopeHighestRatedLast6Months(Builder $query): Builder|QueryBuilder
   {
-    return $query->highestRated(now()->subMonth(6), now())
-      ->highestRated(now()->subMonth(6), now())
+    return $query->highestRated(now()->subMonths(6), now())
+      ->popular(now()->subMonths(6), now())
       ->minReviews(5);
   }
 }
