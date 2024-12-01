@@ -5,9 +5,27 @@
   <form action="{{ route('books.index') }}" method="GET" class="mb-4 flex gap-2">
     <input type="text" name="title" placeholder="タイトルを検索してください" value="{{ request('title') }}"
       class="w-full md:w-1/2 mb-2 px-3 py-2 border rounded h-10">
+    <input type="hidden" name="filter" value="{{ request('filter') }}">
     <button type="submit" class="btn h-10"><i class="fas fa-search"></i> 検索</button>
     <a href="{{ route('books.index') }}" class="btn h-10">クリア</a>
   </form>
+  <div class="filter-container mb-4 flex">
+    @php
+      $filters = [
+          '' => '新しい',
+          'popular_last_month' => '過去1か月でレビュー多数',
+          'popular_last_6months' => '過去6か月でレビュー多数',
+          'highest_rated_last_month' => '過去1か月で高評価',
+          'highest_rated_last_6months' => '過去6か月で高評価',
+      ];
+    @endphp
+    @foreach ($filters as $key => $label)
+      <a href="{{ route('books.index', [...request()->query(), 'filter' => $key]) }}"
+        class="{{ request('filter') === $key || (request('filter') === null && $key === '') ? 'filter-item-active' : 'filter-item' }}">
+        {{ $label }}
+      </a>
+    @endforeach
+  </div>
 
   <ul>
     @forelse ($books as $book)
