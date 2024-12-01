@@ -9,4 +9,5 @@ Route::get('/', function () {
 
 //MEMO: この1行を書くだけで、
 //      booksページのCRUD処理の各ページのルート設定ができる。
+//      →リソースコントローラと呼ぶ
 Route::resource('books', BookController::class);
