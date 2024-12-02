@@ -34,26 +34,26 @@
           <div class="flex flex-wrap items-center justify-between">
             <div class="w-full flex-grow sm:w-auto">
               <a href="{{ route('books.show', $book->id) }}" class="book-title">{{ $book->title }}</a>
-              <span class="book-author">{{ $book->author }}</span>
+              <span class="book-author">{{ $book->author }} 著</span>
             </div>
             <div>
-              <div class="book-rating mb-2"><i class="fas fa-star"></i>{{ number_format($book->reviews_avg_rating, 1) }}
+              @php
+                $averageRating = $book->reviews->avg('rating'); // 平均レーティングを計算
+                $reviewCount = $book->reviews->count(); // レビュー数をカウント
+              @endphp
+              <div class="book-rating mb-2">
+                <i class="fas fa-star"></i>{{ number_format($averageRating, 1) }}
               </div>
               <div class="book-review-count">
-                {{ $book->reviews_count }} {{ Str::plural('review', $book->reviews_count) }}レビュー
+                {{ $reviewCount }} レビュー
               </div>
-
             </div>
           </div>
         </div>
       </li>
     @empty
-      <li class="mb-4">
-        <div class="empty-book-item">
-          <p class="empty-text">書籍が見つかりません</p>
-          <a href="{{ route('books.index') }}" class="reset-link">Reset</a>
-        </div>
-      </li>
+      <li>本が見つかりませんでした。</li>
     @endforelse
+
   </ul>
 @endsection

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Facades\DB;
 
 class Book extends Model
 {
@@ -21,18 +22,29 @@ class Book extends Model
     return $query->where('title', 'LIKE', '%' . $title . '%');
   }
 
-  public function scopePopular(Builder $query, $from = null, $to = null): Builder | QueryBuilder
+  public function scopeWithReviewsCount(Builder $query, $from = null, $to = null): Builder | QueryBuilder
   {
     return $query->withCount([
       'reviews' => fn(Builder $q) => $this->dateRangeFilter($q, $from, $to)
-    ])->orderBy('reviews_count', 'desc');
+    ]);
+  }
+
+  //MEMO: withAvgメソッドを使うときは第二引数が必要で、カラムを指定する
+  public function scopeWithAvgRating(Builder $query, $from = null, $to = null): Builder
+  {
+    return $query->withAvg([
+      'reviews' => fn(Builder $q) => $this->dateRangeFilter($q, $from, $to)
+    ], 'rating');
+  }
+
+  public function scopePopular(Builder $query, $from = null, $to = null): Builder | QueryBuilder
+  {
+    return $query->withReviewsCount($from, $to)->orderBy('reviews_count', 'desc');
   }
 
   public function scopeHighestRated(Builder $query, $from = null, $to = null): Builder | QueryBuilder
   {
-    return $query->withAvg([
-      'reviews' => fn(Builder $q) => $this->dateRangeFilter($q, $from, $to)
-    ], 'rating')->orderBy('reviews_avg_rating', 'desc');
+    return $query->withAvgRating($from, $to)->orderBy('reviews_avg_rating', 'desc');
   }
 
   public function scopeMinReviews(Builder $query, int $minReviews): Builder | QueryBuilder
@@ -60,8 +72,8 @@ class Book extends Model
 
   public function scopePopularLast6Months(Builder $query): Builder|QueryBuilder
   {
-    return $query->popular(now()->subMonth(6), now())
-      ->highestRated(now()->subMonth(6), now())
+    return $query->popular(now()->subMonths(6), now())
+      ->highestRated(now()->subMonths(6), now())
       ->minReviews(5);
   }
 
