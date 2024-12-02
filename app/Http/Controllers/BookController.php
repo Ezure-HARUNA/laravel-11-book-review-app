@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Review;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -48,10 +49,19 @@ class BookController extends Controller
   /**
    * Display the specified resource.
    */
-  public function show(string $id)
+  public function show(Book $book)
   {
-    //
+    // Book::with();
+    return view(
+      'books.show',
+      [
+        'book' => $book->load([
+          'reviews' => fn($query) => $query->latest()
+        ])
+      ]
+    );
   }
+
 
   /**
    * Show the form for editing the specified resource.
