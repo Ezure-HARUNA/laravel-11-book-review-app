@@ -37,15 +37,11 @@
               <span class="book-author">{{ $book->author }} 著</span>
             </div>
             <div>
-              @php
-                $averageRating = $book->reviews->avg('rating'); // 平均レーティングを計算
-                $reviewCount = $book->reviews->count(); // レビュー数をカウント
-              @endphp
               <div class="book-rating mb-2">
-                <i class="fas fa-star"></i>{{ number_format($averageRating, 1) }}
+                <i class="fas fa-star"></i>{{ number_format($book->reviews_avg_rating, 1) }}
               </div>
               <div class="book-review-count">
-                {{ $reviewCount }} レビュー
+                {{ $book->reviews_count }} レビュー
               </div>
             </div>
           </div>
@@ -54,6 +50,5 @@
     @empty
       <li>本が見つかりませんでした。</li>
     @endforelse
-
   </ul>
 @endsection
