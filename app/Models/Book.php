@@ -13,4 +13,14 @@ class Book extends Model
   {
     return $this->hasMany(Review::class);
   }
+
+  public function scopeWithAvgRating($query)
+  {
+    return $query->withAvg('reviews', 'rating');
+  }
+
+  public function scopeWithReviewsCount($query)
+  {
+    return $query->withCount('reviews');
+  }
 }

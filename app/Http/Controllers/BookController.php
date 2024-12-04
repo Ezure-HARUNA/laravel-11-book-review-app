@@ -22,7 +22,7 @@ class BookController extends Controller
     $filter = $request->input('filter', '');
     $books = [];
 
-    $queryBase = "SELECT books.*, AVG(reviews.rating) as reviews_avg_rating, COUNT(reviews.id) as reviews_count
+    $queryBase = "SELECT books.id, books.title, books.author, books.created_at, books.updated_at, AVG(reviews.rating) as reviews_avg_rating, COUNT(reviews.id) as reviews_count
                   FROM books
                   JOIN reviews ON books.id = reviews.book_id
                   WHERE 1=1";
@@ -36,7 +36,7 @@ class BookController extends Controller
 
     switch ($filter) {
       case 'latest':
-        $queryBase .= " ORDER BY books.created_at DESC LIMIT 10";
+        $queryBase .= " GROUP BY books.id ORDER BY books.created_at DESC LIMIT 10";
         $books = DB::select($queryBase, $bindings);
         break;
 
@@ -89,12 +89,14 @@ class BookController extends Controller
         break;
 
       default:
+        $queryBase .= " GROUP BY books.id";
         $books = DB::select($queryBase, $bindings);
         break;
     }
 
     return view('books.index', ['books' => $books]);
   }
+
 
 
 
@@ -120,7 +122,6 @@ class BookController extends Controller
    */
   public function show(int $id)
   {
-    // Book::with();
     $cacheKey = 'book:' . $id;
 
     $book = cache()->remember(
@@ -130,8 +131,10 @@ class BookController extends Controller
         'reviews' => fn($query) => $query->latest()
       ])->withAvgRating()->withReviewsCount()->findOrFail($id)
     );
+
     return view('books.show', ['book' => $book]);
   }
+
 
 
   /**

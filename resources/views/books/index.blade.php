@@ -12,7 +12,7 @@
   <div class="filter-container mb-4 flex">
     @php
       $filters = [
-          '' => '新しい',
+          'latest' => '新しい',
           'popular_last_month' => '過去1か月でレビュー多数',
           'popular_last_6months' => '過去6か月でレビュー多数',
           'highest_rated_last_month' => '過去1か月で高評価',
@@ -38,7 +38,7 @@
             </div>
             <div>
               <div class="book-rating mb-2">
-                <i class="fas fa-star"></i>{{ number_format($book->reviews_avg_rating, 1) }}
+                <x-star-rating :rating="$book->reviews_avg_rating" />
               </div>
               <div class="book-review-count">
                 {{ $book->reviews_count }} レビュー
